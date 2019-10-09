@@ -1,0 +1,22 @@
+//
+
+class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        int len = prices.length;
+        int buy = -prices[0];
+        int sell = 0;
+        
+        for(int i=1; i<len; i++) {
+            int p = prices[i];
+            int nextBuy = Math.max(buy, sell-p);
+            int nextSell = Math.max(sell, buy+p-fee);
+            
+            buy = nextBuy;
+            sell = nextSell;
+        }
+        return sell;
+    }
+}
+
+//Time complexity: O(n).
+// space: O(1)
