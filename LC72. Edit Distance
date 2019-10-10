@@ -1,0 +1,34 @@
+//
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[][] m = new int[len1+1][len2+1];
+        for(int i=0; i<=len1; i++)
+            m[i][0] = i;
+        for(int i=0; i<=len2; i++)
+            m[0][i] = i;
+        
+        for(int i=1; i<=len1; i++) {
+            char c1 = word1.charAt(i-1);
+            for(int j=1; j<=len2; j++) {
+                char c2 = word2.charAt(j-1);
+                if(c1 == c2)
+                    m[i][j] = m[i-1][j-1];
+                else {
+                    // insert c1 to word2; delete c1 from word1:
+                    int insert = m[i-1][j] + 1;
+                    // delete c2 from word2; insert c2 into word1
+                    int delete = m[i][j-1] + 1;
+                    // replace c1 with c2:
+                    int replace = m[i-1][j-1] + 1;
+                    m[i][j] = Math.min(insert, Math.min(delete, replace));
+                }
+            }
+        }
+        return m[len1][len2];
+    }
+}
+
+// time: O(m*n)
+// space: O(m*n)
