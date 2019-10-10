@@ -1,0 +1,24 @@
+//
+
+class Solution {
+    public int minCut(String s) {
+        int len = s.length();
+        boolean[][] m = new boolean[len][len];
+        int[] rec = new int[len+1];
+        
+        for(int i=len-1; i>=0; i--) {
+            rec[i] = len-i;
+            for(int j=i; j<len; j++) {
+                if(i==j || (s.charAt(i) == s.charAt(j) &&
+                           (j==i+1 || m[i+1][j-1]))) {
+                    rec[i] = Math.min(rec[i], rec[j+1]+1);
+                    m[i][j] = true;
+                }
+            }
+        }
+        return rec[0] - 1;
+    }
+}
+
+// time: O(n^2);
+// space: O(n^2);
