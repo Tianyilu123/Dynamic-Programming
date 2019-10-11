@@ -1,0 +1,39 @@
+class Solution {
+    public int maxVacationDays(int[][] flights, int[][] days) {
+        if(flights == null || flights.length == 0) throw new IllegalArgumentException();
+        if(flights[0] == null || flights[0].length == 0)
+            throw new IllegalArgumentException();
+        if(days == null || days.length == 0 || days[0] == null || days[0].length == 0)
+            throw new IllegalArgumentException();
+        
+        int cityLen = flights.length;
+        int weekLen = days[0].length;
+        
+        int[] dp = new int[cityLen];
+        Arrays.fill(dp, Integer.MIN_VALUE);
+        dp[0] = 0;
+        
+        for(int i=0; i<weekLen; i++) {
+            int rollDp[] = new int[cityLen];
+            Arrays.fill(rollDp, Integer.MIN_VALUE);
+            
+            for(int j=0; j<cityLen; j++) {
+                for(int k=0; k<cityLen; k++) {
+                if(k==j || flights[k][j] == 1) {
+                    rollDp[j] = Math.max(rollDp[j], dp[k]+days[j][i]);
+                }
+            }
+        }
+        dp = rollDp;
+    }
+    
+    int max = 0;
+    for(int j=0; j<cityLen; j++) {
+        max = Math.max(max, dp[j]);
+    }
+    return max;
+}
+}
+
+// time: O(k*N*N)
+// space: O(n)
