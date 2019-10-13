@@ -1,46 +1,32 @@
 class Solution {
     public int minCostII(int[][] costs) {
-        if(costs == null || costs.length == 0 || costs[0] == null)
-            return 0;
-        int n = costs.length, k = costs[0].length;
-        if(k==1) return n==1 ? costs[0][0] : 0;
+        if(costs == null || costs.length == 0) return 0;
+        int n = costs.length;
+        int k = costs[0].length;
         
-        int[][] dp = new int[n+1][k];
-        int[] val = new int[k];
-        
-        for(int i=1; i<=n; i++) {
-            int rowIndex = i-1;
+        int firstMin = -1, secondMin = -1;
+        for(int i=0; i<n; i++) {
+            int last1 = firstMin, last2 = secondMin;
+            firstMin = -1; secondMin = -1;
             for(int j=0; j<k; j++) {
-                val[j] = costs[rowIndex][j] + dp[i-1][j];
+                if(j != last1) {
+                    costs[i][j] += last1<0 ? 0 : costs[i-1][last1];
+                } else {
+                    costs[i][j] += last2<0 ? 0 : costs[i-1][last2];
+                }
+                
+                if(firstMin < 0 || costs[i][j] < costs[i][firstMin]) {
+                    secondMin = firstMin;
+                    firstMin = j;
+                } else if(secondMin < 0 || costs[i][j] < costs[i][secondMin]) {
+                    secondMin = j;
+                }
             }
-            
-            getNotVal(dp, i, val);
         }
-        
-        int min = Integer.MAX_VALUE;
-        
-        for(int i=0; i<k; i++) {
-            min = Math.min(min, dp[n][i]);
-        }
-        
-        return min;
-    }
-    
-    private void getNotVal(int[][] dp, int n, int[] val) {
-        int len = val.length;
-        int leftMin = val[0];
-        int rightMin = val[len-1];
-        for(int i=1; i<len; i++) {
-            dp[n][i] = leftMin;
-            leftMin = Math.min(leftMin, val[i]);
-        }
-        for(int i=len-2; i>0; i--) {
-            dp[n][i] = Math.min(dp[n][i], rightMin);
-            rightMin = Math.min(rightMin, val[i]);
-        }
-        dp[n][0] = rightMin;
+        return costs[n-1][firstMin];
     }
 }
+
 
 // time: O(n*k)
 // space: O(1)
