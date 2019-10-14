@@ -46,27 +46,27 @@ class Solution {
 
 class Solution {
     public int findRotateSteps(String ring, String key) {
-        List<Integer>[] indexs = new List[26];
-        for (int i = 0; i < 26; i++) {
-            indexs[i] = new ArrayList<>();
-        }
-        for (int i = 0; i < ring.length(); i++) {
-            indexs[ring.charAt(i) - 'a'].add(i);
-        }
-        int[][] dp = new int[key.length()][ring.length()];
-        return dfs(dp, indexs, 0, 0, ring.length(), key.toCharArray());
+        char[] ringArr = ring.toCharArray();
+        char[] keyArr = key.toCharArray();
+        
+        return dfs(ringArr, keyArr, 0, 0, new int[ringArr.length][keyArr.length]);
     }
-    
-    public int dfs(int[][] dp, List<Integer>[] indexs, int pos, int pre, int n, char[] chs) {
-        if (pos == chs.length) return 0;
-        if (dp[pos][pre] > 0) return dp[pos][pre];
+    private  int dfs(char[] ring, char[] target, int targetIndex, int ringIndex, int[][] memo){
+        if(targetIndex == target.length)    return 0;
+        
+        if(memo[ringIndex][targetIndex] != 0)   return memo[ringIndex][targetIndex];
+        
         int min = Integer.MAX_VALUE;
-        for (int index : indexs[chs[pos] - 'a']) {
-            int d = Math.abs(index - pre);
-            int move = Math.min(d, n - d) + 1;
-            min = Math.min(min, move + dfs(dp, indexs, pos + 1, index, n, chs));
+        for(int i = 0;i < ring.length;i++){
+            if(ring[i] != target[targetIndex])  continue;
+            
+            int dif = Math.abs(i - ringIndex);
+            int distance =  1 + Math.min(dif, ring.length - dif) + 
+                dfs(ring, target, targetIndex + 1, i, memo);
+            min = Math.min(min, distance);            
         }
-        dp[pos][pre] = min;
+        
+        memo[ringIndex][targetIndex] = min;
         return min;
     }
 }
