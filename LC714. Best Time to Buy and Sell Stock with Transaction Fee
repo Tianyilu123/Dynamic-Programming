@@ -27,16 +27,9 @@ class Solution {
 class Solution {
     public int maxProfit(int[] prices, int fee) {
         if(prices.length < 2) return 0;
-        // meaning - buy[i]:
-        // what is the max profit that for subarray [0, i] where
-        // the operations end with a buy
-        
+   
         int[] buy = new int[prices.length];
         buy[0] = 0 - prices[0];
-        
-        // meaning - sell[i]:
-        // what is the max profit that for subarray [0, i] where
-        // the operations end with a sell
         
         int[] sell = new int[prices.length];
         
