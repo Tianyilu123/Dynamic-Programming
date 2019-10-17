@@ -22,24 +22,22 @@ class Solution {
 class Solution {
     public boolean PredictTheWinner(int[] nums) {
         int len = nums.length;
-        return helper(nums, 0, nums.length-1, new Integer[len][len]) >= 0;
+        return helper(nums, 0, len-1, new Integer[len][len]) >= 0;
     }
     
-    private int helper(int[] nums, int start, int end, Integer[][] mem) {
-        if(mem[start][end] == null) {
-            
-            if(start == end) {
+    private int helper(int[] nums, int start, int end, Integer[][] dp) {
+        
+        if(dp[start][end] != null) return dp[start][end];
+        
+        if(start == end) {
             return nums[start];
-            }
-            
-            mem[start][end] = Math.max(nums[start]-helper(nums, start+1, end, mem), 
-                        nums[end] - helper(nums, start, end-1, mem));
-            return mem[start][end];
+        } else {
+            dp[start][end] =  Math.max((nums[start] - helper(nums, start+1, end, dp)),
+                            (nums[end] - helper(nums, start, end-1, dp))) ;
+            return dp[start][end];
         }
-        return mem[start][end];
     }
 }
-
 
 // method 3: DP - 2 dimentsion:
 
