@@ -1,36 +1,34 @@
 // method1: DP+memorization
 class Solution {
     public int findRotateSteps(String ring, String key) {
-        if(ring == null || ring.length() == 0) return -1;
-        if(key == null || key.length() == 0) return -1;
-        int keyLen = key.length(), ringLen = ring.length();
-        int mem[][] = new int[keyLen][ringLen];
-        
-        int minLevel = Integer.MAX_VALUE;
-        for(int i=0; i<keyLen; i++) {
-            minLevel = Integer.MAX_VALUE;
-            for(int j=0; j<ringLen; j++) {
-                mem[i][j] = Integer.MAX_VALUE;
-                if(key.charAt(i) == ring.charAt(j)) {
-                    if(i==0) {
-                        mem[i][j] = getDistance(j,0,ringLen) + 1;
-                    }else{
-                        for(int k=0; k<ringLen; k++) {
-                            if(mem[i-1][k] != Integer.MAX_VALUE) {
-                                mem[i][j] = Math.min(mem[i][j], 
-                                                     mem[i-1][k] + getDistance(j,k,ringLen)+1);
-                            }
-                        }
-                    }
-                }
-                minLevel = Math.min(minLevel, mem[i][j]);
-            }
-        }
-        return minLevel;
+        int lenR = ring.length();
+        int lenK = key.length();
+        return dfs(ring, key, 0, 0, new int[lenR][lenK]);
     }
     
-    private int getDistance(int idx1, int idx2, int len) {
-        return Math.min((len + idx1 - idx2)%len, (len + idx2 - idx1)%len);
+    
+    private  int dfs(String ring, String target, int targetIndex, int ringIndex, int[][] memo){
+        if(targetIndex == target.length())    
+            return 0;
+        
+        if(memo[ringIndex][targetIndex] != 0)   
+            return memo[ringIndex][targetIndex];
+        
+        int min = Integer.MAX_VALUE;
+        
+        for(int i = 0;i < ring.length();i++){
+            if(ring.charAt(i) != target.charAt(targetIndex))  
+                continue;
+            
+            int diff = Math.abs(i - ringIndex);
+            int distance =  1 + Math.min(diff, ring.length() - diff) + 
+                dfs(ring, target, targetIndex + 1, i, memo);
+            
+            min = Math.min(min, distance);            
+        }
+        
+        memo[ringIndex][targetIndex] = min;
+        return min;
     }
 }
 
