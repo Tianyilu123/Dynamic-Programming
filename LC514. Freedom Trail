@@ -36,36 +36,27 @@ class Solution {
 // space: O(m*n)
 
 
-// method2: DP with rotating Map:
 
-
-
-// method 3: DFS + Memorization:
+// method2: DP:
 
 class Solution {
     public int findRotateSteps(String ring, String key) {
-        char[] ringArr = ring.toCharArray();
-        char[] keyArr = key.toCharArray();
+        int lenR = ring.length();
+        int lenK = key.length();
+        int[][] dp = new int[lenK+1][lenR];
         
-        return dfs(ringArr, keyArr, 0, 0, new int[ringArr.length][keyArr.length]);
-    }
-    private  int dfs(char[] ring, char[] target, int targetIndex, int ringIndex, int[][] memo){
-        if(targetIndex == target.length)    return 0;
-        
-        if(memo[ringIndex][targetIndex] != 0)   return memo[ringIndex][targetIndex];
-        
-        int min = Integer.MAX_VALUE;
-        for(int i = 0;i < ring.length;i++){
-            if(ring[i] != target[targetIndex])  continue;
-            
-            int dif = Math.abs(i - ringIndex);
-            int distance =  1 + Math.min(dif, ring.length - dif) + 
-                dfs(ring, target, targetIndex + 1, i, memo);
-            min = Math.min(min, distance);            
+        for(int i=lenK-1; i>=0; i--) {
+            for(int j=0; j<lenR; j++) {
+                dp[i][j] = Integer.MAX_VALUE;
+                for(int k=0; k<lenR; k++) {
+                    if(ring.charAt(k) == key.charAt(i)) {
+                        int diff = Math.abs(j-k);
+                        int step = Math.min(diff, lenR-diff);
+                        dp[i][j] = Math.min(dp[i][j], step + dp[i+1][k]);
+                    }
+                }
+            }
         }
-        
-        memo[ringIndex][targetIndex] = min;
-        return min;
+        return dp[0][0] + lenK;
     }
 }
-
