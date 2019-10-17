@@ -60,3 +60,7 @@ class Solution {
         return dp[0][0] + lenK;
     }
 }
+
+// time: O(m*n*n)
+// space: O(m*n)
+
