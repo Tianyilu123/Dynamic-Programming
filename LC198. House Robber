@@ -1,4 +1,5 @@
-//
+// method 1:
+
 class Solution {
     public int rob(int[] nums) {
         if(nums == null || nums.length == 0) return 0;
@@ -12,6 +13,23 @@ class Solution {
         return Math.max(m1, m2);
     }
 }
+
+
+// method 2:
+
+class Solution {
+    public int rob(int[] nums) {
+        int rob = 0, noRob = 0;
+        
+        for(int i=0; i<nums.length; i++) {
+            int temp = rob;
+            rob = noRob + nums[i];
+            noRob = Math.max(temp, noRob);
+        }
+        return Math.max(rob, noRob);
+    }
+}
+
 
 // time: O(n)
 // space: O(1)
