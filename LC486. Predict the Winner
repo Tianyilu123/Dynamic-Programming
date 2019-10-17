@@ -1,3 +1,4 @@
+ways: 1->2->3->4 : all of them are necessary:
 
 // method 1: DFS:
 
